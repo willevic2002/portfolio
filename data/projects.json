@@ -1,0 +1,15 @@
+[
+  {"id": "ultrasonic-array", "title": "ultrasonic-array", "kind": "board",
+   "summary": "Egenbyggd 3D-ultraljudssensor: en 40 kHz-sändare och en array med 16 digitala MEMS-mikrofoner (PDM). Riktning och avstånd till hinder bestäms med chirp, matchat filter och beamforming på FPGA.",
+   "tech": ["VHDL", "FPGA", "Python", "DSP"], "url": "https://github.com/willevic2002/ultrasonic-array", "year": 2026},
+  {"id": "robot-mower", "title": "autonom robotgräsklippare", "kind": "robot",
+   "summary": "Teamprojekt i mjukvaruprojektmetoder (2026): autonom robot med LiDAR, ROS2 och förstärkningsinlärning, iOS-app och backend.",
+   "tech": ["Python", "ROS2", "RL", "LiDAR", "Swift", "Node.js"], "year": 2026},
+  {"id": "karriarum26", "title": "Karriarum26", "kind": "book",
+   "summary": "Checklista och karta över Karriärum 2026 med filter per utbildning. PWA, allt sparas i webbläsaren.",
+   "tech": ["HTML", "JavaScript", "PWA"], "url": "https://github.com/willevic2002/Karriarum26", "year": 2026},
+  {"id": "enchip", "title": "enchip", "kind": "chip",
+   "summary": "TODO: beskriv projektet", "tech": ["C"], "url": "https://github.com/willevic2002/enchip"},
+  {"id": "elektriska-gr", "title": "Elektriska-gr", "kind": "chip",
+   "summary": "TODO: beskriv projektet", "tech": ["C"], "url": "https://github.com/willevic2002/Elektriska-gr"}
+]

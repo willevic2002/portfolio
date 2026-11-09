@@ -1,0 +1,4 @@
+.claude/
+tests/out/
+# private reference photo, not needed by the site
+design/setup-reference.jpeg

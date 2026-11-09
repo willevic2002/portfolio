@@ -1,0 +1,157 @@
+/* Event Horizon design tokens — every color is from the brief palette (or rgba of one).
+   Font: add to <head>, or keep the @import below (must stay first in the file that imports this).
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"> */
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap");
+
+:root {
+  color-scheme: dark;
+
+  /* ---- palette (raw, from Omarchy colors.toml) ---- */
+  --eh-bg: #050505;
+  --eh-darker: #000000;
+  --eh-lighter: #141414;
+  --eh-selection: #2a2a2a;
+  --eh-muted: #6a6a6a;
+  --eh-fg: #c8c8c8;
+  --eh-fg-light: #e0e0e0;
+  --eh-fg-bright: #f5f5f5;
+  --eh-accent: #f0f0f0;
+  --eh-red: #b07c7c;
+  --eh-yellow: #b4ad8c;
+  --eh-orange: #b09480;
+  --eh-green: #8ea889;
+  --eh-cyan: #8aa5a5;
+  --eh-blue: #8b9aac;
+  --eh-magenta: #a48da8;
+
+  /* ---- semantic colors ---- */
+  --color-bg: var(--eh-bg);               /* page */
+  --color-bg-deep: var(--eh-darker);      /* hero void, canvas clear */
+  --color-surface: var(--eh-lighter);     /* panel, cards, list rows */
+  --color-surface-hover: var(--eh-selection);
+  --color-selection: var(--eh-selection); /* ::selection bg */
+  --color-text: var(--eh-fg);             /* body — 12.18:1 on bg */
+  --color-text-strong: var(--eh-fg-light);/* headings — 15.44:1 */
+  --color-text-bright: var(--eh-fg-bright);/* name, active — 18.69:1 */
+  --color-text-muted: var(--eh-muted);    /* NON-TEXT ONLY (rules, borders, icons) or text >= 24px: 3.77:1 */
+  --color-accent: var(--eh-accent);       /* links, focus ring, photon ring */
+  --color-border: var(--eh-selection);    /* hairlines (decorative) */
+  --color-border-strong: var(--eh-muted); /* input/control borders — 3.77:1, passes 3:1 non-text */
+  --color-focus: var(--eh-accent);
+
+  /* log tags — sparse muted color, all >= 6.4:1 on bg and surface */
+  --tag-edu: var(--eh-blue);
+  --tag-work: var(--eh-green);
+  --tag-proj: var(--eh-cyan);
+  --tag-skill: var(--eh-yellow);
+  --tag-contact: var(--eh-magenta);
+  --tag-todo: var(--eh-orange);
+  --tag-error: var(--eh-red);
+
+  /* ---- type ---- */
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --font-body: var(--font-mono);
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-bold: 700;
+
+  /* fluid scale: 375px -> 1280px */
+  --fs-xs: 0.75rem;                                   /* 12px  meta only, never body */
+  --fs-sm: 0.8125rem;                                 /* 13px  timestamps, tags */
+  --fs-base: 0.9375rem;                               /* 15px  body (mono reads large) */
+  --fs-md: 1.0625rem;                                 /* 17px  entry titles */
+  --fs-lg: clamp(1.125rem, 1rem + 0.6vw, 1.375rem);   /* section heads */
+  --fs-xl: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);    /* role line */
+  --fs-hero: clamp(2rem, 1.3rem + 3.6vw, 4rem);       /* name */
+  --lh-tight: 1.15;
+  --lh-base: 1.6;
+  --ls-label: 0.04em;
+  --measure: 72ch;
+
+  /* ---- spacing (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --gutter: clamp(1rem, 0.6rem + 2vw, 2.5rem);
+  --content-max: 1120px;
+  --hit-min: 44px;
+
+  /* ---- radii & borders ---- */
+  --radius-0: 0;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-pill: 999px;
+  --border-w: 1px;
+  --border-hair: var(--border-w) solid var(--color-border);
+  --border-control: var(--border-w) solid var(--color-border-strong);
+  --focus-ring: 2px solid var(--color-focus);
+  --focus-offset: 3px;
+
+  /* ---- photon ring / light-edge ---- */
+  /* thin white gradient edge: fades in from void, peaks white, fades out */
+  --edge-light: linear-gradient(90deg,
+      rgba(240, 240, 240, 0) 0%,
+      rgba(240, 240, 240, 0.55) 35%,
+      rgba(245, 245, 245, 1) 50%,
+      rgba(240, 240, 240, 0.55) 65%,
+      rgba(240, 240, 240, 0) 100%);
+  --edge-light-v: linear-gradient(180deg,
+      rgba(240, 240, 240, 0) 0%,
+      rgba(245, 245, 245, 0.9) 50%,
+      rgba(240, 240, 240, 0) 100%);
+  /* hero motif: dark core, razor ring, soft accretion falloff (use as background on a square element) */
+  --photon-ring: radial-gradient(circle at 50% 50%,
+      rgba(0, 0, 0, 1) 0 38%,
+      rgba(245, 245, 245, 0.95) 39.2%,
+      rgba(240, 240, 240, 0.35) 41%,
+      rgba(200, 200, 200, 0.12) 47%,
+      rgba(20, 20, 20, 0) 62%);
+  /* accretion disk: flattened warm-neutral glow, sits behind the ring */
+  --accretion: radial-gradient(ellipse 60% 12% at 50% 50%,
+      rgba(245, 245, 245, 0.55) 0%,
+      rgba(176, 148, 128, 0.18) 40%,
+      rgba(5, 5, 5, 0) 75%);
+
+  /* ---- glow shadows ---- */
+  --glow-sm: 0 0 0 1px rgba(240, 240, 240, 0.25), 0 0 8px rgba(240, 240, 240, 0.12);
+  --glow-md: 0 0 0 1px rgba(240, 240, 240, 0.4), 0 0 18px rgba(240, 240, 240, 0.18);
+  --glow-ring: 0 0 0 1px rgba(245, 245, 245, 0.9), 0 0 24px 2px rgba(240, 240, 240, 0.25),
+    0 0 64px 8px rgba(200, 200, 200, 0.08);
+  --shadow-panel: 0 24px 64px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(42, 42, 42, 1);
+  --scrim: rgba(0, 0, 0, 0.6);
+
+  /* ---- motion ---- */
+  --dur-instant: 80ms;
+  --dur-fast: 150ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+  --dur-ring: 12s;     /* photon-ring slow rotation / shimmer loop */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --motion-ok: 1;      /* JS reads this: getComputedStyle(root).getPropertyValue('--motion-ok') */
+
+  /* ---- layers ---- */
+  --z-canvas: 0;
+  --z-overlay: 10;
+  --z-panel: 100;
+  --z-skip: 1000;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 0ms;
+    --dur-slow: 0ms;
+    --dur-ring: 0s;
+    --motion-ok: 0;
+  }
+}

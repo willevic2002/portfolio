@@ -1,0 +1,19 @@
+{
+  "name": "Victor Karlsson",
+  "title": "ingenjörsstudent",
+  "location": "Jönköping",
+  "about": "TODO: några rader om dig själv",
+  "contact": [
+    {"label": "github", "url": "https://github.com/willevic2002"}
+  ],
+  "education": [
+    {"start": "2023", "end": null, "title": "TODO: programnamn", "org": "Jönköping University", "detail": "TODO"}
+  ],
+  "experience": [
+    {"start": "TODO", "end": null, "title": "TODO", "org": "TODO"}
+  ],
+  "skills": [
+    {"group": "språk & hdl", "items": ["C", "Python", "VHDL", "JavaScript", "Swift"]},
+    {"group": "område", "items": ["inbyggda system", "FPGA", "robotik (ROS2, LiDAR)", "webb"]}
+  ]
+}

@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8"><title>layout probe</title>
+<pre id="out">pending</pre>
+<script type="module">
+import * as L from '../js/room/layout.js';
+const out = {};
+try {
+  for (const n of [0, 1, 6, 7, 12]) {
+    const r = L.layoutShelf(n);
+    // tolerate array-of-slots or {rows, slots}
+    const slots = Array.isArray(r) ? r : (r.slots || r.items || []);
+    out[n] = { raw: r, slots };
+  }
+  document.getElementById('out').textContent = JSON.stringify(out);
+} catch (e) {
+  document.getElementById('out').textContent = JSON.stringify({ error: String(e) });
+}
+</script>

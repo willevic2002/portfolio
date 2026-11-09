@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>cv &amp; rummet</title>
+  <meta name="description" content="Cv som en logg och ett skrivbord i 3D, med projekten på hyllan.">
+  <meta name="theme-color" content="#050505">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-dFvxa6dfZf/97HJCs2HnQHB+01nXKqZyihNYNYoOOKM='; style-src 'self'; img-src 'self' data:; connect-src 'self' https://cdn.jsdelivr.net; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+  <script type="importmap">
+  {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+              "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip" href="#innehall">hoppa till innehåll</a>
+  <header class="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="#top">victor <span>~/</span></a>
+      <nav aria-label="sidor">
+        <ul>
+          <li><a href="#cv">cv</a></li>
+          <li><a href="#rummet">rummet</a></li>
+          <li><a href="#contact">kontakt</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="innehall">
+    <section id="top" class="hero" aria-labelledby="hero-name">
+      <div class="wrap hero__in">
+        <div class="hero__text">
+          <p class="prompt">victor@eh:~$ whoami</p>
+          <h1 id="hero-name">&nbsp;</h1>
+          <p class="role"><span id="hero-role">&nbsp;</span><span class="caret" aria-hidden="true">▍</span></p>
+          <p class="cta">
+            <a href="#cv">[ läs loggen ]</a>
+            <a href="#rummet">[ gå in i rummet ]</a>
+          </p>
+        </div>
+        <div class="ring" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <div id="cv" class="wrap cv">
+      <noscript><p class="notice">loggen kunde inte laddas — se <a href="https://github.com/willevic2002">github.com/willevic2002</a></p></noscript>
+    </div>
+
+    <section id="rummet" class="wrap room" aria-labelledby="rummet-h">
+      <h2 id="rummet-h" class="sec"><span aria-hidden="true">#</span>rummet</h2>
+      <p class="intro">mitt skrivbord, återskapat. hyllan ovanför bordet är mina projekt.</p>
+      <div class="room__grid">
+        <div class="room__stage">
+          <div id="room-frame" class="frame">
+            <div id="room-canvas"></div>
+            <p id="room-status" class="status" role="status" aria-live="polite"><span class="mini-ring" aria-hidden="true"></span>laddar rummet…</p>
+            <p id="room-hint" class="hint" aria-hidden="true" hidden><span class="hint-fine">dra för att titta runt · klicka på en hylla-sak</span><span class="hint-touch">dra för att titta runt · tryck på en hylla-sak</span></p>
+          </div>
+          <p id="room-note" class="notice note" hidden>[error] webgl saknas — rummet kan inte visas. projekten finns i listan.</p>
+        </div>
+        <div class="room__side">
+          <h3 id="list-h">projekt på hyllan</h3>
+          <ul id="project-list" class="plist" aria-labelledby="list-h"></ul>
+          <aside id="project-panel" class="panel" aria-live="polite" aria-label="projektinfo" hidden></aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <span>eof · <time id="year">2026</time></span>
+      <a href="https://github.com/willevic2002" rel="noopener">github.com/willevic2002</a>
+    </div>
+  </footer>
+</body>
+</html>
