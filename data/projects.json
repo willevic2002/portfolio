@@ -4,11 +4,12 @@
     "title": "autonom robotgräsklippare",
     "kind": "mower",
     "category": "projekt",
-    "summary": "Teamprojekt i mjukvaruprojektmetoder (2026): autonom robotgräsklippare med LiDAR, ROS2 och förstärkningsinlärning, iOS-app och backend.",
+    "summary": "Teamprojekt i mjukvaruprojektmetoder (2026): autonom robotgräsklippare med LiDAR, ROS2, iOS-app och backend. Min del: förstärkningsinlärning (RL). Jag tränade en policy i en egen simulering att köra och undvika hinder med LiDAR (RPLidar C1), exporterade den till ONNX och körde den på roboten bakom en säkerhetssköld.",
     "tech": [
       "Python",
       "ROS2",
       "RL",
+      "ONNX",
       "LiDAR",
       "Swift",
       "Node.js"
