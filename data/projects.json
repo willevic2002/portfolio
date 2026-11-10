@@ -90,7 +90,7 @@
   },
   {
     "id": "elektriska-gr",
-    "title": "Elektriska-gr – labbar",
+    "title": "elektriska gränssnitt – labbar",
     "kind": "book",
     "category": "projekt",
     "summary": "Kurs med flera labbar i C på STM32L433 (STM32CubeIDE): labb 5–7.",
