@@ -17,7 +17,8 @@ def check(ac, name, fn):
 def load(p): return json.loads((ROOT / p).read_text())
 def assert_(cond, msg): return None if cond else msg
 
-KINDS = {"chip", "board", "robot", "book", "box"}
+KINDS = {"mower", "pcb", "thermometer", "devboard", "phone", "chip", "book", "box", "board", "robot"}
+SLOTS = {"desk-left", "desk-mid", "desk-right", "desk-front", "sill", "floor-rug", "floor-corner", "drawers-top"} | {f"shelf-{i}" for i in range(7)}
 YM = re.compile(r"^\d{4}(-\d{2})?$")
 
 def projects_schema():
@@ -29,7 +30,9 @@ def projects_schema():
         for k in ("title", "summary"):
             if not isinstance(p.get(k), str) or not p[k]: return f"{p['id']}: {k}"
         if not (isinstance(p.get("tech"), list) and all(isinstance(t, str) for t in p["tech"])): return f"{p['id']}: tech"
-        if "kind" in p and not isinstance(p["kind"], str): return f"{p['id']}: kind"
+        if "kind" in p and p["kind"] not in KINDS: return f"{p['id']}: kind {p['kind']}"
+        if "category" in p and p["category"] not in ("projekt", "intresse"): return f"{p['id']}: category"
+        if "slot" in p and not (isinstance(p["slot"], str) and p["slot"] in SLOTS): return f"{p['id']}: slot {p['slot']}"
         if "year" in p and not isinstance(p["year"], int): return f"{p['id']}: year"
     if len(set(ids)) != len(ids): return "duplicate ids"
 
@@ -38,11 +41,12 @@ def projects_urls():
         if "url" in p and not str(p["url"]).startswith("https://"): return f"{p['id']}: url not https"
 
 def projects_count():
-    return assert_(len(load("data/projects.json")) <= 12, ">12 projects (D4: warn => console line)")
+    return assert_(len(load("data/projects.json")) <= 15, ">15 projects (warn => console line)")
 
 def projects_ac4():
     ps = load("data/projects.json")
-    return assert_(len(ps) == 5 and any("url" not in p for p in ps), "expect 5 projects, mower without url")
+    nourl = {p["id"] for p in ps if "url" not in p}
+    return assert_(len(ps) == 7 and {"grillmonitor", "robot-mower"} <= nourl, f"expect 7 projects, grillmonitor+robot-mower without url (nourl={nourl})")
 
 def entry_ok(e):
     if not isinstance(e, dict): return "entry not object"
@@ -71,7 +75,22 @@ def cv_schema():
 
 def cv_urls():
     for x in load("data/cv.json")["contact"]:
-        if not re.match(r"^(https://|mailto:|tel:)", x["url"]): return f"contact url {x['url']}"
+        if not re.match(r"^(https://|mailto:)", x["url"]): return f"contact url {x['url']}"
+
+def cv_no_todo():
+    return assert_("TODO" not in (ROOT / "data/cv.json").read_text(), "TODO in cv.json")
+
+# Swedish mobile numbers: 07x-xxx xx xx / 07xxxxxxxx / +46 7x ...
+PHONE = re.compile(r"(?<!\d)(?:\+46[\s-]?7|07)\d[\s-]?\d{3}[\s-]?\d{2}[\s-]?\d{2}(?!\d)")
+def no_phone():
+    bad = []
+    for p in ROOT.rglob("*"):
+        rel = p.relative_to(ROOT).parts
+        if not p.is_file() or rel[0] in ("tests", "docs", "design", ".git", "node_modules") or p.suffix in (".png", ".jpg", ".ico", ".woff2", ".glb"): continue
+        try: txt = p.read_text()
+        except Exception: continue
+        if PHONE.search(txt): bad.append("/".join(rel))
+    return assert_(not bad, "phone number in " + ", ".join(bad))
 
 def sources():
     return [p for ext in ("html", "js", "css") for p in ROOT.rglob(f"*.{ext}")
@@ -112,10 +131,12 @@ def lang():
 
 check("AC-4", "projects.json schema, unique ids", projects_schema)
 check("AC-8", "project urls https", projects_urls)
-check("AC-2", "<=12 projects in test data", projects_count)
-check("AC-4", "5 initial projects, mower has no url", projects_ac4)
+check("AC-2", "<=15 projects in real data", projects_count)
+check("AC-4", "7 projects, grillmonitor + robot-mower have no url", projects_ac4)
 check("AC-1", "cv.json schema", cv_schema)
-check("AC-1", "cv contact urls", cv_urls)
+check("AC-1", "cv contact urls https/mailto", cv_urls)
+check("AC-1", "cv.json has no TODO", cv_no_todo)
+check("PRIV", "no phone number in published files", no_phone)
 check("AC-8", "no root-absolute src/href/fetch/import", no_abs)
 check("AC-9", "importmap pins three@0.170.0 (three + addons/)", importmap)
 check("AC-9", "no package.json runtime deps", no_build)

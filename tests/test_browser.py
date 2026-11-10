@@ -84,7 +84,20 @@ def fx_run(name, text, hash_=""):
     out, err = chrome(["--dump-dom"], u + hash_, "fx-" + name)
     return out, console_lines(err)
 
-def mk(n): return [{"id": f"p{i}", "title": f"proj {i}", "kind": "board", "summary": "s", "tech": ["x"], "year": 2026} for i in range(n)]
+def mk(n): return [{"id": f"p{i}", "title": f"proj {i}", "kind": "pcb", "summary": "s", "tech": ["x"], "year": 2026} for i in range(n)]
+
+def probe(prefix, hash_="", w=1280, args=(), tag="probe"):
+    """Load the site in tests/probe.html (iframe of width w); returns facts dict or {'error':..}."""
+    import html as H
+    out, err = chrome(["--dump-dom", "--virtual-time-budget=30000", *args], f"{prefix}tests/probe.html?w={w}&h={hash_.replace('#', '%23')}", tag)
+    m = re.search(r'<pre id="out">(.*?)</pre>', out, re.S)
+    try: return json.loads(H.unescape(m.group(1))), console_lines(err)
+    except Exception as e: return {"error": f"{type(e).__name__}: {e}"}, console_lines(err)
+
+def focus(dom):
+    m = re.search(r"<[^>]*id=\"room-canvas\"[^>]*>", dom)
+    d = re.search(r'data-focus="([^"]*)"', m.group(0)) if m else None
+    return d.group(1) if d else None
 def items(dom):
     m = re.search(r"<[^>]*id=\"room-canvas\"[^>]*>", dom)
     d = re.search(r'data-items="(\d+)"', m.group(0)) if m else None
@@ -93,7 +106,7 @@ def nbuttons(dom): return len(re.findall(r"<button\b[^>]*data-project-id", dom))
 
 try:
     cdn_ok = subprocess.run(["curl", "-sfI", "-m", "8", CDN], capture_output=True).returncode == 0
-    names = ["backwall", "desk", "monitor", "pc", "drawers", "chair", "lamp", "window", "radiator", "shelf"]
+    names = ["backwall", "desk", "monitor", "pc", "drawers", "chair", "lamp", "window", "radiator", "shelf", "scooter", "rug", "plant", "stringlights", "ledstrip", "particles"]  # OBJECT_NAMES
 
     # 1 WebGL
     if not cdn_ok:
@@ -114,12 +127,16 @@ try:
         have = set(do.group(1).split(",")) if do else set()
         report("AC-17", "data-objects has all named objects", set(names) <= have, f"missing {set(names)-have}")
         report("AC-8", "WebGL run: no :CONSOLE lines", not con, "; ".join(con[:5]))
+        report("V2", "data-view=overview on load", re.search(r"id=\"room-canvas\"[^>]*data-view=\"overview\"|data-view=\"overview\"[^>]*id=\"room-canvas\"", dom) is not None, tagtxt[:200])
+        nvb = len(re.findall(r"<button\b[^>]*data-view=", dom))
+        report("V2", "view toggle buttons present when ready", nvb >= 2, f"{nvb} buttons")
 
         # 3 deep links
         first = PROJECTS[0]
         dom, con = run_dom([], f"#p={first['id']}", "deeplink")
         m = re.search(r"<[^>]*id=\"project-panel\".*?</aside>", dom, re.S)
         report("AC-5", "deep link panel contains title", bool(m) and first["title"] in m.group(0))
+        report("V2", "#p=<id> sets data-focus", focus(dom) == first["id"], f"focus={focus(dom)}")
         report("AC-8", "deep link: no :CONSOLE lines", not con, "; ".join(con[:5]))
         nourl = next((p for p in PROJECTS if "url" not in p), None)
         if nourl:
@@ -154,13 +171,21 @@ try:
         dom, con = fx_run("fx0", "[]")
         report("AC-2", "0 projects: 'inga projekt än', data-items=0, no console", "inga projekt än" in dom and items(dom) == 0 and not con,
                f"items={items(dom)} {con[:2]}")
-        dom, con = fx_run("fx12", json.dumps(mk(12)))
-        report("AC-2", "12 projects: items=12, 12 buttons, no console", items(dom) == 12 and nbuttons(dom) == 12 and not con,
+        dom, con = fx_run("fx15", json.dumps(mk(15)))
+        report("AC-2", "15 projects: items=15, 15 buttons, no console", items(dom) == 15 and nbuttons(dom) == 15 and not con,
                f"items={items(dom)} btn={nbuttons(dom)} {con[:2]}")
-        dom, con = fx_run("fx14", json.dumps(mk(14)))
-        report("AC-2", "14 projects: items=12, 14 buttons, exactly one console warn",
-               items(dom) == 12 and nbuttons(dom) == 14 and len(con) == 1 and "projects: 14" in con[0],
+        dom, con = fx_run("fx16", json.dumps(mk(16)))
+        report("AC-2", "16 projects: items=15, 16 buttons, exactly one console warn",
+               items(dom) == 15 and nbuttons(dom) == 16 and len(con) == 1 and "projects: 16" in con[0],
                f"items={items(dom)} btn={nbuttons(dom)} {con[:3]}")
+        ints = mk(3); ints[1]["category"] = "intresse"
+        d, con = probe(fixture("fxinterest", json.dumps(ints)), tag="probe-interest")
+        report("V2", "fxinterest: #interest-list visible with 1 button", d.get("interest") is True and d.get("interestButtons") == 1 and not con, f"{d} {con[:2]}")
+        d, con = probe(URL, tag="probe-desktop")
+        report("V2", "real data: #interest-list hidden, view toggle visible", d.get("interest") is False and d.get("viewToggle") is True, str(d))
+        d, con = probe(URL, "#cv", tag="probe-cv")
+        report("E1", "#cv deep link opens drawer (role=dialog visible)", d.get("room") == "ready" and d.get("dialog") is True, str(d))
+        report("AC-8", "#cv drawer: no :CONSOLE lines", not con, "; ".join(con[:3]))
         bad = mk(3) + [{"title": "no id", "kind": "board", "summary": "s", "tech": [], "year": 1}, {**mk(1)[0]}, {**mk(1)[0], "id": 5}]
         dom, con = fx_run("fxbad", json.dumps(bad))
         report("AC-2", "malformed entries dropped (3 valid left), no crash, data-cv=ready",
@@ -180,44 +205,27 @@ try:
     report("AC-10", "fallback: #room-note has text", bool(m) and bool(re.sub(r"<[^>]+>", "", m.group(1)).strip()))
     report("AC-10", "fallback: no :CONSOLE lines", not con, "; ".join(con[:5]))
 
-    # layout
-    dom, con = run_dom([], "tests/layout.html", "layout")
+    d, con = probe(URL, "#cv", args=["--disable-3d-apis"], tag="probe-cv-fallback")
+    report("E1", "fallback #cv: CV inline visible, no dialog, view toggle hidden",
+           d.get("room") == "fallback" and d.get("cv") is True and d.get("dialog") is False and d.get("viewToggle") is False, str(d))
+
+    # placement (pure module)
+    dom, con = run_dom([], "tests/placement.html", "placement")
     m = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
     try:
         import html as H
         data = json.loads(H.unescape(m.group(1)))
-        if "error" in data: raise ValueError(data["error"])
-        rows_exp = {"0": 1, "1": 1, "6": 1, "7": 2, "12": 2}
-        bad = []
-        for n, exp in rows_exp.items():
-            raw, slots = data[n]["raw"], data[n]["slots"]
-            rows = raw.get("rows") if isinstance(raw, dict) else None
-            if isinstance(rows, list): rows = len(rows)
-            if rows is None:
-                rows = len({s.get("row", s.get("r")) for s in slots}) or 1
-            if rows != exp: bad.append(f"n={n}: rows {rows} != {exp}")
-            by = {}
-            for s in slots: by.setdefault(s.get("row", s.get("r", 0)), []).append(s["x"])
-            if len(slots) != int(n): bad.append(f"n={n}: {len(slots)} slots")
-            for r, xs in by.items():
-                xs.sort()
-                if any(b - a < 0.18 - 1e-6 for a, b in zip(xs, xs[1:])): bad.append(f"n={n} row {r}: overlap")
-        report("AC-2", "layoutShelf rows (1,1,1,2,2), no overlap", not bad, "; ".join(bad))
+        for name, err in data.items(): report("PLACE", name, err is None, str(err))
     except Exception as e:
-        report("AC-2", "layoutShelf rows (1,1,1,2,2), no overlap", False, f"{type(e).__name__}: {e}")
+        report("PLACE", "placement.js loads and runs", False, f"{type(e).__name__}: {e} (module missing?)")
 
     # 5 mobile
     shot = OUT / "mobile.png"; shot.unlink(missing_ok=True)
     chrome(["--window-size=375,812", f"--screenshot={shot}"], URL, "mobile")
     report("AC-14", "mobile screenshot >20KB", shot.exists() and shot.stat().st_size > 20000)
-    dom, con = run_dom([], "tests/probe.html", "probe")
-    m = re.search(r'<pre id="out">(.*?)</pre>', dom, re.S)
-    try:
-        import html as H
-        d = json.loads(H.unescape(m.group(1)))
-        report("AC-14", "375px: no horizontal scroll", d["scrollWidth"] <= d["clientWidth"], str(d))
-    except Exception as e:
-        report("AC-14", "375px: no horizontal scroll", False, f"probe: {e}")
+    d, con = probe(URL, w=375, tag="probe")
+    report("AC-14", "375px: #guide-toggle visible", d.get("guideToggle") is True, str(d))
+    report("AC-14", "375px: no horizontal scroll", "scrollWidth" in d and d["scrollWidth"] <= d["clientWidth"], str(d))
 
     f404 = server_404s()
     report("AC-8", "server log has no 404", not f404, "; ".join(f404[:5]))

@@ -1,15 +1,104 @@
 [
-  {"id": "ultrasonic-array", "title": "ultrasonic-array", "kind": "board",
-   "summary": "Egenbyggd 3D-ultraljudssensor: en 40 kHz-sändare och en array med 16 digitala MEMS-mikrofoner (PDM). Riktning och avstånd till hinder bestäms med chirp, matchat filter och beamforming på FPGA.",
-   "tech": ["VHDL", "FPGA", "Python", "DSP"], "url": "https://github.com/willevic2002/ultrasonic-array", "year": 2026},
-  {"id": "robot-mower", "title": "autonom robotgräsklippare", "kind": "robot",
-   "summary": "Teamprojekt i mjukvaruprojektmetoder (2026): autonom robot med LiDAR, ROS2 och förstärkningsinlärning, iOS-app och backend.",
-   "tech": ["Python", "ROS2", "RL", "LiDAR", "Swift", "Node.js"], "year": 2026},
-  {"id": "karriarum26", "title": "Karriarum26", "kind": "book",
-   "summary": "Checklista och karta över Karriärum 2026 med filter per utbildning. PWA, allt sparas i webbläsaren.",
-   "tech": ["HTML", "JavaScript", "PWA"], "url": "https://github.com/willevic2002/Karriarum26", "year": 2026},
-  {"id": "enchip", "title": "enchip", "kind": "chip",
-   "summary": "TODO: beskriv projektet", "tech": ["C"], "url": "https://github.com/willevic2002/enchip"},
-  {"id": "elektriska-gr", "title": "Elektriska-gr", "kind": "chip",
-   "summary": "TODO: beskriv projektet", "tech": ["C"], "url": "https://github.com/willevic2002/Elektriska-gr"}
+  {
+    "id": "robot-mower",
+    "title": "autonom robotgräsklippare",
+    "kind": "mower",
+    "category": "projekt",
+    "summary": "Teamprojekt i mjukvaruprojektmetoder (2026): autonom robotgräsklippare med LiDAR, ROS2 och förstärkningsinlärning, iOS-app och backend.",
+    "tech": [
+      "Python",
+      "ROS2",
+      "RL",
+      "LiDAR",
+      "Swift",
+      "Node.js"
+    ],
+    "year": 2026
+  },
+  {
+    "id": "grillmonitor",
+    "title": "GrillMonitor",
+    "kind": "thermometer",
+    "category": "projekt",
+    "summary": "WiFi-ansluten grilltermometer med två NTC-givare, baserad på ESP32-C6. Eget kretskort i KiCad, firmware i ESP-IDF och en app i Flutter. Kommunicerar via MQTT (Mosquitto på egen NAS).",
+    "tech": [
+      "ESP32-C6",
+      "ESP-IDF",
+      "C",
+      "KiCad",
+      "Flutter",
+      "MQTT"
+    ],
+    "year": 2026
+  },
+  {
+    "id": "ultrasonic-array",
+    "title": "ultrasonic-array",
+    "kind": "pcb",
+    "category": "projekt",
+    "summary": "Egenbyggd 3D-ultraljudssensor: en 40 kHz-sändare och en array med 16 digitala MEMS-mikrofoner (PDM). Riktning och avstånd till hinder bestäms med chirp, matchat filter och beamforming på FPGA.",
+    "tech": [
+      "VHDL",
+      "FPGA",
+      "Python",
+      "DSP"
+    ],
+    "url": "https://github.com/willevic2002/ultrasonic-array",
+    "year": 2026
+  },
+  {
+    "id": "stm32-labs",
+    "title": "inbyggda system – STM32",
+    "kind": "devboard",
+    "category": "projekt",
+    "summary": "Flera projekt i C på STM32: radarsystem med ultraljudssensor (HC-SR04) och servo, trafikljussimulator med lysdioder och summer, elektronisk tärning och digital klocka. Fokus på GPIO, timers och avbrottshantering.",
+    "tech": [
+      "C",
+      "STM32",
+      "GPIO",
+      "timers",
+      "avbrott"
+    ],
+    "year": 2024
+  },
+  {
+    "id": "karriarum26",
+    "title": "Karriarum26",
+    "kind": "phone",
+    "category": "projekt",
+    "summary": "Checklista och karta över Karriärum 2026 med filter per utbildning. PWA, allt sparas i webbläsaren.",
+    "tech": [
+      "HTML",
+      "JavaScript",
+      "PWA"
+    ],
+    "url": "https://github.com/willevic2002/Karriarum26",
+    "year": 2026
+  },
+  {
+    "id": "enchip",
+    "title": "enchipsdatorer – labbar",
+    "kind": "chip",
+    "category": "projekt",
+    "summary": "Kurs med flera labbar i C på STM32L433 (STM32CubeIDE): labb 1–3.",
+    "tech": [
+      "C",
+      "STM32",
+      "STM32CubeIDE"
+    ],
+    "url": "https://github.com/willevic2002/enchip"
+  },
+  {
+    "id": "elektriska-gr",
+    "title": "Elektriska-gr – labbar",
+    "kind": "book",
+    "category": "projekt",
+    "summary": "Kurs med flera labbar i C på STM32L433 (STM32CubeIDE): labb 5–7.",
+    "tech": [
+      "C",
+      "STM32",
+      "STM32CubeIDE"
+    ],
+    "url": "https://github.com/willevic2002/Elektriska-gr"
+  }
 ]

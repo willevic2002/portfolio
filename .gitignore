@@ -2,3 +2,5 @@
 tests/out/
 # private reference photo, not needed by the site
 design/setup-reference.jpeg
+design/style-reference.png
+tests/__pycache__/

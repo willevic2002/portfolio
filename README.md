@@ -1,13 +1,14 @@
 # portfolio
 
-Min personliga sajt på GitHub Pages: ett cv i form av en logg, och mitt skrivbord i 3D (Three.js)
-där projekten står på en hylla. Ren HTML/CSS/ES-moduler, inget byggsteg. Three.js laddas från
-jsDelivr (`three@0.170.0`) via en importmap i `index.html`.
+Min personliga sajt på GitHub Pages: ett 3D-rum (Three.js) som är startsidan, där varje föremål är ett
+projekt eller ett intresse, och ett cv i form av en logg. Ren HTML/CSS/ES-moduler, inget byggsteg.
+Three.js laddas från jsDelivr (`three@0.170.0`) via en importmap i `index.html` (ändras importmapen måste
+`sha256` i CSP-metataggen räknas om). Utan WebGL blir sidan ett vanligt dokument med guiden och cv:t.
 
 Allt innehåll ligger i `data/`:
 
-- `data/cv.json` – cv:t
-- `data/projects.json` – projekten (hyllan och listan genereras härifrån)
+- `data/cv.json` – cv:t (visas i cv-lådan, `#cv`)
+- `data/projects.json` – föremålen i rummet och listan i guiden
 
 ## Lägg till ett projekt
 
@@ -17,7 +18,9 @@ Lägg till ett objekt i listan i `data/projects.json`:
 {
   "id": "mitt-projekt",
   "title": "mitt projekt",
-  "kind": "board",
+  "kind": "pcb",
+  "category": "projekt",
+  "slot": "desk-front",
   "summary": "Kort beskrivning.",
   "tech": ["C", "FPGA"],
   "url": "https://github.com/willevic2002/mitt-projekt",
@@ -26,15 +29,31 @@ Lägg till ett objekt i listan i `data/projects.json`:
 ```
 
 - `id`: unikt, bara `a-z`, `0-9` och `-`.
-- `kind`: `chip`, `board`, `robot`, `book` eller `box`. Okänt eller saknat värde blir `box`.
+- `category`: `projekt` eller `intresse`. Saknas den, eller är den okänd, blir det `projekt`.
+- `kind`: vilket föremål som ritas: `mower`, `pcb`, `thermometer`, `devboard`, `phone`, `chip`, `book` eller `box`
+  (reserv). Alias: `board` = `pcb`, `robot` = `mower`. Okänt eller saknat värde blir `box`.
+- `slot` (valfri): fäst föremålet på en viss plats. Ankarna är `desk-left`, `desk-mid`, `desk-right`, `desk-front`,
+  `sill`, `floor-rug`, `floor-corner`, `drawers-top` och `shelf-0` till `shelf-6`. Utan `slot` (eller om platsen är
+  upptagen) väljs kindens förvalda plats, annars nästa lediga hylla.
 - `url` är valfri och måste börja med `https://`. Utan `url` visas "ingen publik länk".
-- `summary` kan vara `"TODO"` (visas markerat tills du fyller i det). Första `tech`-värdet visas som språk.
-- Max 12 projekt hamnar på hyllan (två rader); alla visas i listan.
+- `summary` kan vara `"TODO..."` (visas markerat tills du fyller i det). Alla `tech`-värden visas på kortet.
+- Max 15 föremål placeras i rummet (en plats var). Fler hamnar ändå i guiden, och konsolen varnar en gång med
+  `projects: N > 15`.
+
+## Lägg till ett intresse
+
+Samma format som ett projekt, med `"category": "intresse"`. Intressen listas under rubriken "intressen" i guiden
+och får ett föremål i rummet (välj `kind`, eller `box`). Rubriken syns bara när det finns minst ett intresse.
+
+## Länkar och navigation
+
+`#p=<id>` öppnar ett projekt direkt, `#skrivbord` startar vid skrivbordet och `#cv` öppnar cv-lådan.
 
 ## Redigera cv:t
 
 Ändra `data/cv.json`. Datum är `"YYYY"` eller `"YYYY-MM"`; `"end": null` betyder pågår (visas som `nu`).
 Allt som börjar med `TODO` visas markerat så att du ser vad som saknas. Hitta aldrig på uppgifter.
+Kontaktlänkar får vara `https://` eller `mailto:`. Telefonnummer publiceras inte.
 
 ## Kör lokalt
 

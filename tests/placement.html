@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8"><title>placement</title>
+<pre id="out">pending</pre>
+<script type="module">
+import { place, PREFERRED } from '../js/room/placement.js';
+const A = ['desk-left','desk-mid','desk-right','desk-front','sill','floor-rug','floor-corner','drawers-top',
+  ...Array.from({length: 7}, (_, i) => 'shelf-' + i)];
+const kinds = Object.keys(PREFERRED);
+const mk = (n, f = i => ({})) => Array.from({length: n}, (_, i) => ({id: 'i' + i, kind: kinds[i % kinds.length], ...f(i)}));
+const placed = (items) => place(items, A).filter(p => p.anchor);
+const res = {};
+const t = (name, fn) => { try { res[name] = fn() || null; } catch (e) { res[name] = String(e); } };
+for (const n of [0, 1, 7, 15, 16]) t('n=' + n + ' unique anchors, <=15 placed', () => {
+  const p = placed(mk(n)), a = p.map(x => x.anchor);
+  if (new Set(a).size !== a.length) return 'duplicate anchors ' + a;
+  if (a.some(x => !A.includes(x))) return 'unknown anchor ' + a;
+  if (new Set(p.map(x => x.id)).size !== p.length) return 'duplicate ids';
+  if (p.length !== Math.min(n, 15)) return 'placed ' + p.length;
+});
+t('PREFERRED honoured (one item per kind)', () => {
+  for (const k of kinds) { const p = placed([{id: 'x', kind: k}]); if (p[0]?.anchor !== PREFERRED[k]) return k + ' -> ' + p[0]?.anchor; }
+});
+t('slot override wins', () => {
+  const p = placed([{id: 'x', kind: 'mower', slot: 'desk-left'}]);
+  if (p[0]?.anchor !== 'desk-left') return String(p[0]?.anchor);
+});
+t('taken slot -> next free shelf-N', () => {
+  const p = placed([{id: 'a', kind: 'mower', slot: 'floor-rug'}, {id: 'b', kind: 'mower', slot: 'floor-rug'}]);
+  const b = p.find(x => x.id === 'b');
+  if (!b || !/^shelf-\d$/.test(b.anchor)) return JSON.stringify(p);
+});
+t('invalid slot ignored -> PREFERRED', () => {
+  const p = placed([{id: 'x', kind: 'pcb', slot: 'nowhere'}]);
+  if (p[0]?.anchor !== PREFERRED.pcb) return String(p[0]?.anchor);
+});
+document.getElementById('out').textContent = JSON.stringify(res);
+</script>

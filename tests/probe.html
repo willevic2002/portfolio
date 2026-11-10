@@ -1,12 +1,32 @@
 <!doctype html>
 <meta charset="utf-8"><title>probe</title>
-<style>html,body{margin:0}iframe{border:0;width:375px;height:667px}</style>
-<iframe id="f" src="../index.html"></iframe>
+<style>html,body{margin:0}iframe{border:0;display:block}</style>
+<!-- ?w=<px>&h=<hash incl #> : loads ../index.html in an iframe of width w, waits for data-room, reports DOM facts -->
+<iframe id="f"></iframe>
 <pre id="out">pending</pre>
 <script>
-setTimeout(() => {
-  const d = document.getElementById('f').contentDocument.documentElement;
-  document.getElementById('out').textContent =
-    JSON.stringify({ scrollWidth: d.scrollWidth, clientWidth: d.clientWidth });
-}, 6000);
+const q = new URLSearchParams(location.search);
+const f = document.getElementById('f');
+f.style.width = (q.get('w') || 1280) + 'px'; f.style.height = '800px';
+f.src = '../index.html' + (q.get('h') || '');
+const t0 = Date.now();
+const poll = setInterval(() => {
+  let d, w;
+  try { d = f.contentDocument; w = f.contentWindow; } catch (e) { return; }
+  const room = d && d.documentElement.getAttribute('data-room');
+  if ((!room || room === 'loading') && Date.now() - t0 < 25000) return;
+  clearInterval(poll);
+  setTimeout(() => {
+    const vis = sel => { const e = d.querySelector(sel);
+      if (!e || e.hidden || !e.getClientRects().length) return false;
+      const s = w.getComputedStyle(e); return s.visibility !== 'hidden' && s.display !== 'none'; };
+    const de = d.documentElement;
+    document.getElementById('out').textContent = JSON.stringify({
+      room: de.getAttribute('data-room'), scrollWidth: de.scrollWidth, clientWidth: de.clientWidth,
+      guideToggle: vis('#guide-toggle'), dialog: vis('[role=dialog]'), cv: vis('#cv'),
+      viewToggle: vis('#view-toggle'), interest: vis('#interest-list'),
+      interestButtons: d.querySelectorAll('#interest-list button[data-project-id]').length,
+      viewButtons: d.querySelectorAll('#view-toggle button[data-view]').length });
+  }, 1500);
+}, 200);
 </script>

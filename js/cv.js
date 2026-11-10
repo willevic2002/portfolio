@@ -1,4 +1,4 @@
-// Rendering only. All data goes in via textContent; links only when https://.
+// Rendering only. All data goes in via textContent; links only when https:// (or mailto: for contact).
 
 const isTodo = (v) => typeof v === 'string' && v.startsWith('TODO');
 
@@ -17,12 +17,12 @@ function val(text) {
 }
 
 function link(url, label, extra = {}) {
-  if (typeof url !== 'string' || !url.startsWith('https://')) return document.createTextNode(label);
+  if (typeof url !== 'string' || !/^(https:\/\/|mailto:)/.test(url)) return document.createTextNode(label);
   return el('a', { text: label, attrs: { href: url, rel: 'noopener', ...extra } });
 }
 
 function section(id, title) {
-  const h = el('h2', { cls: 'sec', attrs: { id: `${id}-h` } }, [
+  const h = el('h3', { cls: 'sec', attrs: { id: `${id}-h` } }, [
     el('span', { text: '#', attrs: { 'aria-hidden': 'true' } }),
     document.createTextNode(title),
   ]);
@@ -58,11 +58,11 @@ function entries(list, tag) {
 export function renderCV(root, cv) {
   root.replaceChildren();
   const set = (sel, t) => { const n = document.querySelector(sel); if (n && t) n.textContent = t; };
-  set('#hero-name', cv.name);
-  set('#hero-role', [cv.title, cv.location].filter(Boolean).join(' · '));
+  set('#guide-name', cv.name);
+  set('#guide-role', cv.title);
   if (cv.name) {
-    document.title = `${cv.name.toLowerCase()} — cv & rummet`;
-    document.querySelector('.brand').firstChild.textContent = `${cv.name.split(' ')[0].toLowerCase()} `;
+    set('#hero-name', `${cv.name} — portfolio`);
+    document.title = `${cv.name} — cv & rummet`;
   }
 
   const about = section('about', 'om mig');
@@ -82,7 +82,7 @@ export function renderCV(root, cv) {
   const contact = section('contact', 'kontakt');
   const rows = (cv.contact ?? []).map((c) =>
     logItem({ tag: c.url?.startsWith('mailto:') ? 'mail' : 'link', tagKind: 'contact',
-      head: [document.createTextNode(`${c.label}: `), link(c.url, c.url?.replace(/^https:\/\//, '') ?? '')] }));
+      head: [document.createTextNode(`${c.label}: `), link(c.url, c.url?.replace(/^(https:\/\/|mailto:)/, '') ?? '')] }));
   if (cv.location) rows.push(logItem({ tag: 'info', tagKind: 'contact', head: [document.createTextNode(`plats: ${cv.location}`)] }));
   contact.append(el('ol', { cls: 'log' }, rows));
   root.append(contact);
@@ -92,18 +92,17 @@ function skillLine(g) {
   return logItem({ tag: 'skill', tagKind: 'skill', head: [document.createTextNode(`${g.group}: ${(g.items ?? []).join(' · ')}`)] });
 }
 
-/** One <li><button> per project, in shelf order. onPick(id, button); onHover(id|null) optional. */
+/** One <li><button> per item, in data order. onPick(id, button); onHover(id|null) optional. */
 export function renderProjectList(ul, projects, onPick, onHover) {
   ul.replaceChildren();
   if (!projects.length) {
-    ul.append(el('li', { cls: 'empty', text: 'hyllan är tom — inga projekt än.' }));
+    ul.append(el('li', { cls: 'empty', text: 'inga projekt än.' }));
     return;
   }
   for (const p of projects) {
     const btn = el('button', { attrs: { type: 'button', 'data-project-id': p.id, 'aria-pressed': 'false', 'aria-controls': 'project-panel' } }, [
-      el('span', { cls: 'tag', text: `[${p.kind ?? 'box'}]` }),
       el('span', { cls: 'ttl', text: p.title }),
-      ...(p.tech?.length ? [el('span', { cls: 'lang', text: `· ${p.tech[0].toLowerCase()}` })] : []),
+      ...(p.year ? [el('span', { cls: 'yr', text: String(p.year) })] : []),
     ]);
     btn.addEventListener('click', () => onPick(p.id, btn));
     if (onHover) {
@@ -116,27 +115,27 @@ export function renderProjectList(ul, projects, onPick, onHover) {
   }
 }
 
-/** project=null hides the panel. The close button carries data-close; main.js wires it. */
+/** project=null hides the card. The close button carries data-close; main.js wires it. */
 export function renderProjectPanel(panel, project) {
   panel.replaceChildren();
   panel.hidden = !project;
   if (!project) return;
   const hasUrl = typeof project.url === 'string' && project.url.startsWith('https://');
+  const interest = project.category === 'intresse';
   panel.append(
     el('span', { cls: 'esc', text: 'esc', attrs: { 'aria-hidden': 'true' } }),
-    el('button', { cls: 'close', text: '×', attrs: { type: 'button', 'data-close': '', 'aria-label': 'stäng' } }),
+    el('button', { cls: 'close x', text: '×', attrs: { type: 'button', 'data-close': '', 'aria-label': 'stäng' } }),
     el('p', { cls: 'cmd', text: `$ cat projekt/${project.id}.md` }),
-    el('h3', { text: project.title, attrs: { id: 'project-title', tabindex: '-1' } }),
+    el('h2', { text: project.title, attrs: { id: 'project-title', tabindex: '-1' } }),
     el('p', { cls: 'meta' }, [
-      el('span', {}, [el('span', { cls: 'tag', text: '[språk] ' }), document.createTextNode((project.tech?.[0] ?? '').toLowerCase())]),
-      el('span', {}, [el('span', { cls: 'tag', text: '[typ] ' }), document.createTextNode(project.kind ?? 'box')]),
-      ...(project.year ? [el('span', { text: String(project.year) })] : []),
+      el('span', { cls: `tag tag--${interest ? 'skill' : 'proj'}`, text: interest ? '[intresse]' : '[projekt]' }),
+      ...(project.year ? [el('span', { text: `· ${project.year}` })] : []),
     ]),
     el('p', {}, [val(project.summary ?? '')]),
   );
-  if (project.tech?.length) panel.append(el('p', { cls: 'meta', text: project.tech.join(' · ') }));
+  if (project.tech?.length) panel.append(el('p', { cls: 'tech', text: project.tech.map((t) => String(t).toLowerCase()).join(' · ') }));
   panel.append(hasUrl
     ? el('p', {}, [el('a', { attrs: { href: project.url, target: '_blank', rel: 'noopener' } }, [
         document.createTextNode('öppna på github ↗'), el('span', { cls: 'sr-only', text: ' (öppnas i ny flik)' })])])
-    : el('p', {}, [el('span', { cls: 'tag tag--contact', text: '[info] ' }), document.createTextNode('ingen publik länk')]));
+    : el('p', {}, [el('span', { cls: 'tag tag--contact', text: '[privat] ' }), document.createTextNode('ingen publik länk')]));
 }

@@ -138,6 +138,20 @@
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --motion-ok: 1;      /* JS reads this: getComputedStyle(root).getPropertyValue('--motion-ok') */
 
+  /* ---- v2 room-first overlay (see design/spec-v2.md §5) ---- */
+  /* floating panels over the canvas: lighter @ .94 -> worst case over a #f5f5f5 pixel = #222222;
+     every palette text colour incl. red (4.56:1) stays >= 4.5:1 on it */
+  --overlay-bg: rgba(20, 20, 20, 0.94);
+  --overlay-tip: rgba(5, 5, 5, 0.85);   /* hover label pill, worst #292929: fg-bright 13.34:1 */
+  --hint-bg: rgba(0, 0, 0, 0.8);        /* bottom hint pill, worst #313131: fg 7.78:1 */
+  --vignette: radial-gradient(ellipse 75% 70% at 55% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.65) 100%);
+  --guide-w: 256px;
+  --card-w: 380px;
+  --cv-w: min(760px, 92vw);
+  --hit-row: 36px;                      /* guide rows, pointer:fine only (WCAG 2.5.8 >= 24px); coarse uses --hit-min */
+  --overlay-inset: var(--space-4);      /* 16px from viewport edges */
+  --dur-camera: 900ms;                  /* camera tween; 0 under reduced motion = instant cut */
+
   /* ---- layers ---- */
   --z-canvas: 0;
   --z-overlay: 10;
@@ -152,6 +166,7 @@
     --dur-base: 0ms;
     --dur-slow: 0ms;
     --dur-ring: 0s;
+    --dur-camera: 0ms;
     --motion-ok: 0;
   }
 }

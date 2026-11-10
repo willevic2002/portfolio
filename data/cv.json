@@ -1,19 +1,27 @@
 {
   "name": "Victor Karlsson",
-  "title": "ingenjörsstudent",
+  "title": "ingenjörsstudent · datateknik, inbyggda system",
   "location": "Jönköping",
-  "about": "TODO: några rader om dig själv",
+  "about": "Engagerad och målinriktad ingenjörsstudent inom datateknik med erfarenhet av ledarskap, kundservice och tekniska miljöer. Har praktisk erfarenhet av inbyggda system och C-programmering, bland annat genom projekt med STM32-plattformen. Trivs i roller där jag får kombinera problemlösning med struktur och samarbete, och söker möjligheter att utvecklas inom mjukvaru- och hårdvarunära teknik.",
   "contact": [
+    {"label": "e-post", "url": "mailto:victor.karlsson02@icloud.com"},
     {"label": "github", "url": "https://github.com/willevic2002"}
   ],
   "education": [
-    {"start": "2023", "end": null, "title": "TODO: programnamn", "org": "Jönköping University", "detail": "TODO"}
+    {"start": "2024", "end": "2027", "title": "Datateknik: inbyggda system", "org": "Jönköpings Tekniska Högskola"},
+    {"start": "2024", "end": "2024", "title": "Teknisk bastermin", "org": "Jönköpings Tekniska Högskola"},
+    {"start": "2021", "end": "2022", "title": "Gymnasieingenjör", "org": "Skanska Gymnasiet"},
+    {"start": "2018", "end": "2021", "title": "Gymnasieexamen", "org": "Tycho Braheskolan"}
   ],
   "experience": [
-    {"start": "TODO", "end": null, "title": "TODO", "org": "TODO"}
+    {"start": "2026-06", "end": "2026-08", "title": "Fältprovare", "org": "Husqvarna, R&D Wheeled Lab", "detail": "Fältprovare inom R&D-avdelningen Wheeled Lab, Wheeled Europe. Inblick i hur produktutveckling och testning går till i en R&D-organisation."},
+    {"start": "2025-06", "end": "2025-08", "title": "Vårdbiträde", "org": "Hemtjänsten Habo kommun", "detail": "Stöd och omsorg till äldre. Självständigt arbete, ansvar och trygghet i mötet med människor."},
+    {"start": "2022-06", "end": "2023-12", "title": "Arbetsledare", "org": "Skanska Asfalt", "detail": "Delegerade arbetsuppgifter till team och förde arbetsloggar. Effektivare planering genom tydlig kommunikation och dagliga rapporter."},
+    {"start": "2021-06", "end": "2021-09", "title": "Medarbetare", "org": "Coop", "detail": "Kundbemötande på golvet och i kassan."},
+    {"start": "2020-06", "end": "2020-09", "title": "Butikssäljare", "org": "NetOnNet", "detail": "Kundservice i högt tempo och produktrådgivning."}
   ],
   "skills": [
-    {"group": "språk & hdl", "items": ["C", "Python", "VHDL", "JavaScript", "Swift"]},
-    {"group": "område", "items": ["inbyggda system", "FPGA", "robotik (ROS2, LiDAR)", "webb"]}
+    {"group": "teknik", "items": ["C-programmering", "inbyggda system (STM32, ESP32)", "KiCad", "ESP-IDF", "Flutter", "MQTT", "VHDL / FPGA", "Python"]},
+    {"group": "personligt", "items": ["ledarskap", "kundservice", "kommunikation", "problemlösning", "anpassningsförmåga", "Microsoft Office"]}
   ]
 }
