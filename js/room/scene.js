@@ -19,7 +19,7 @@ const ANCHORS = [
   ['sill', 1.88, 0.92, 0.15, -Math.PI / 2, [0.2, 0.15, 0.2]],
   ['floor-rug', 1.25, 0, 1.05, FLOOR_YAW, [0.7, 0.3, 0.7]],
   ['floor-corner', 1.5, 0, -0.95, FLOOR_YAW, [0.4, 0.4, 0.4]],
-  ['drawers-top', 0.37, 0.755, -1.5, 0, [0.26, 0.2, 0.3]],
+  ['drawers-top', 0.0, 0.755, -1.5, 0, [0.26, 0.2, 0.3]], // name kept for saved slots; the PC now sits on the drawers, so this is the freed desk corner
   ['shelf-0', -1.05, TOP.wall, -1.69, 0, [0.3, 0.2, 0.18]],
   ['shelf-1', -0.7, TOP.wall, -1.69, 0, [0.3, 0.2, 0.18]],
   ['shelf-2', -0.5, TOP.wall, -1.69, 0, [0.2, 0.2, 0.18]],

@@ -30,7 +30,7 @@ export function buildDesk(root) {
   return g;
 }
 
-/** Curved ultrawide (cylinder segment), red-edged second panel, stands, bias light. */
+/** Curved ultrawide (cylinder segment), stand, bias light. */
 export function buildMonitor(root, led) {
   const g = named('monitor', root);
   const black = mat(C.dark, { rough: 0.45 });
@@ -45,16 +45,6 @@ export function buildMonitor(root, led) {
   box(g, 0.06, 0.17, 0.035, black, cx, 0.84, cz - 0.04);
   box(g, 0.3, 0.012, 0.19, black, cx, DESK_TOP + 0.006, cz + 0.02);
 
-  const panel = new THREE.Group();
-  panel.position.set(-0.2, 0.8 + 0.2, -1.68);
-  panel.rotation.y = -0.2;
-  box(panel, 0.34, 0.4, 0.03, black, 0, 0, 0);
-  box(panel, 0.3, 0.36, 0.004, mat(C.bg, { rough: 0.3, emissive: C.blue, glow: 0.2 }), 0, 0, 0.016, 0);
-  box(panel, 0.012, 0.4, 0.034, mat(C.red, { rough: 0.5, emissive: C.red, glow: 0.5 }), 0.176, 0, 0, 0);
-  box(panel, 0.05, 0.1, 0.03, black, 0, -0.25, -0.02);
-  box(panel, 0.18, 0.01, 0.12, black, 0, -0.295 - 0.0, -0.02);
-  g.add(panel);
-
   box(led, 0.95, 0.006, 0.01, basic(C.bright), cx, 0.84, -1.79, 0); // bias strip behind the screen
   const glow = glowPlane(1.9, 0.9, C.blue, 0.4);
   glow.position.set(cx, 0.98, -1.796);
@@ -63,11 +53,11 @@ export function buildMonitor(root, led) {
   return g;
 }
 
-/** Black PC with a tempered-glass side (towards -x / the camera) and cyan fan rings. */
+/** Black PC on top of the drawer unit, tempered-glass side (towards -x / the camera) and cyan fan rings. */
 export function buildPc(root) {
   const g = named('pc', root);
   const case_ = mat(C.dark, { rough: 0.25, metal: 0.3 });
-  const x0 = -0.02, x1 = 0.2, cy = 0.985, cz = -1.55;
+  const x0 = 0.26, x1 = 0.48, cy = 0.985, cz = -1.55;
   box(g, x1 - x0, 0.46, 0.44, case_, (x0 + x1) / 2, cy, cz, 0.008);
   box(g, 0.22, 0.012, 0.44, mat(C.sel, { rough: 0.5 }), (x0 + x1) / 2, cy - 0.236, cz, 0.003); // base
   const glass = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.42), mat(0x061012, { rough: 0.1, metal: 0.4 }));
