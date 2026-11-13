@@ -17,7 +17,7 @@ def check(ac, name, fn):
 def load(p): return json.loads((ROOT / p).read_text())
 def assert_(cond, msg): return None if cond else msg
 
-KINDS = {"mower", "pcb", "thermometer", "devboard", "phone", "chip", "book", "box", "board", "robot"}
+KINDS = {"mower", "pcb", "thermometer", "devboard", "phone", "chip", "book", "brain", "box", "board", "robot"}
 SLOTS = {"desk-left", "desk-mid", "desk-right", "desk-front", "sill", "floor-rug", "floor-corner", "drawers-top"} | {f"shelf-{i}" for i in range(7)}
 YM = re.compile(r"^\d{4}(-\d{2})?$")
 
@@ -46,7 +46,7 @@ def projects_count():
 def projects_ac4():
     ps = load("data/projects.json")
     nourl = {p["id"] for p in ps if "url" not in p}
-    return assert_(len(ps) == 7 and {"grillmonitor", "robot-mower"} <= nourl, f"expect 7 projects, grillmonitor+robot-mower without url (nourl={nourl})")
+    return assert_(len(ps) == 8 and {"grillmonitor", "robot-mower"} <= nourl, f"expect 8 projects, grillmonitor+robot-mower without url (nourl={nourl})")
 
 def entry_ok(e):
     if not isinstance(e, dict): return "entry not object"
@@ -132,7 +132,7 @@ def lang():
 check("AC-4", "projects.json schema, unique ids", projects_schema)
 check("AC-8", "project urls https", projects_urls)
 check("AC-2", "<=15 projects in real data", projects_count)
-check("AC-4", "7 projects, grillmonitor + robot-mower have no url", projects_ac4)
+check("AC-4", "8 projects, grillmonitor + robot-mower have no url", projects_ac4)
 check("AC-1", "cv.json schema", cv_schema)
 check("AC-1", "cv contact urls https/mailto", cv_urls)
 check("AC-1", "cv.json has no TODO", cv_no_todo)

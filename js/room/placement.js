@@ -1,7 +1,7 @@
 // Pure placement rules (no imports): which anchor does each project's object stand on?
 export const PREFERRED = {
   mower: 'floor-rug', pcb: 'desk-front', thermometer: 'sill', devboard: 'shelf-0',
-  chip: 'shelf-1', phone: 'shelf-3', book: 'shelf-4', box: 'shelf-5',
+  chip: 'shelf-1', phone: 'shelf-3', book: 'shelf-4', brain: 'shelf-5', box: 'shelf-5',
 };
 // E5: overflow order once slot and preferred anchor are taken; covers all 15 anchors.
 export const OVERFLOW = [

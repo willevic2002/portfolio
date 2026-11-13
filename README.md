@@ -30,7 +30,7 @@ Lägg till ett objekt i listan i `data/projects.json`:
 
 - `id`: unikt, bara `a-z`, `0-9` och `-`.
 - `category`: `projekt` eller `intresse`. Saknas den, eller är den okänd, blir det `projekt`.
-- `kind`: vilket föremål som ritas: `mower`, `pcb`, `thermometer`, `devboard`, `phone`, `chip`, `book` eller `box`
+- `kind`: vilket föremål som ritas: `mower`, `pcb`, `thermometer`, `devboard`, `phone`, `chip`, `book`, `brain` eller `box`
   (reserv). Alias: `board` = `pcb`, `robot` = `mower`. Okänt eller saknat värde blir `box`.
 - `slot` (valfri): fäst föremålet på en viss plats. Ankarna är `desk-left`, `desk-mid`, `desk-right`, `desk-front`,
   `sill`, `floor-rug`, `floor-corner`, `drawers-top` och `shelf-0` till `shelf-6`. Utan `slot` (eller om platsen är

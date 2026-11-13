@@ -6,7 +6,7 @@ import { canonicalKind } from './placement.js';
 // Procedural project objects. Metres, origin = bottom centre, local +z faces the camera. Each item owns its
 // materials. Colours are Event Horizon palette hexes (design/spec-v2.md 1.4). Parts flagged userData.noHit are
 // ignored for bounds/outlines/shadows (radar fan); userData.noShadow drops animated groups from the shadow bake.
-export const KINDS = ['mower', 'pcb', 'thermometer', 'devboard', 'phone', 'chip', 'book', 'box'];
+export const KINDS = ['mower', 'pcb', 'thermometer', 'devboard', 'phone', 'chip', 'book', 'brain', 'box'];
 
 const C = {
   void: 0x050505, dark: 0x141414, sel: 0x2a2a2a, muted: 0x6a6a6a, steel: 0xc8c8c8, white: 0xe0e0e0,
@@ -255,6 +255,31 @@ const builders = {
       const x0 = -0.065 + i * 0.045;
       tube(bb, [[x0, 0.012, -0.0145], [x0 + 0.02, 0.012 + 0.028, -0.0145 + (i % 2 ? 0.012 : -0.004)], [x0 + 0.04, 0.012, i % 2 ? 0.0085 : -0.0085]], 0.0016, std(c, { rough: 0.6 }));
     });
+  },
+
+  /** Agent Monitor: neuron-cluster "brain" (lead agent core + subagent nodes) turning above a dark base. */
+  brain(g, { animate }) {
+    cyl(g, [0.06, 0.07, 0.025, 28], std(C.dark, { rough: 0.45 }), [0, 0.0125, 0]);
+    cyl(g, [0.061, 0.061, 0.004, 28], basic(0xf5f5f5), [0, 0.027, 0]); // LED ring
+    cyl(g, [0.004, 0.004, 0.03, 8], std(C.sel), [0, 0.042, 0]);
+    const net = group(g, [0, 0.125, 0]);
+    const R = 0.07;
+    const ico = new THREE.IcosahedronGeometry(R, 0);
+    put(net, ico, new THREE.MeshBasicMaterial({ color: C.cyan, wireframe: true, transparent: true, opacity: 0.55 })); // synapses
+    sphere(net, 0.022, std(C.white, { glow: 0.9, emissive: C.cyan })); // lead agent
+    const hues = [C.cyan, C.green, C.yellow, C.red, C.blue, C.orange];
+    const seen = new Set();
+    const p = ico.getAttribute('position');
+    for (let i = 0; i < p.count; i++) { // non-indexed geometry: 12 unique corners
+      const pos = [p.getX(i), p.getY(i), p.getZ(i)];
+      const key = pos.map((v) => v.toFixed(3)).join();
+      if (seen.has(key)) continue;
+      const c = hues[seen.size % hues.length];
+      seen.add(key);
+      sphere(net, 0.009, std(c, { glow: 1 }), pos);
+    }
+    net.userData.noShadow = true;
+    animate((t) => { net.rotation.set(0.25 * Math.sin(t * 0.5), t * 0.4, 0); });
   },
 
   /** Fallback: dark cube with a cold-white LED edge on top. */

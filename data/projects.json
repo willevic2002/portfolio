@@ -101,5 +101,21 @@
       "STM32CubeIDE"
     ],
     "url": "https://github.com/willevic2002/Elektriska-gr"
+  },
+  {
+    "id": "agent-monitor",
+    "title": "Agent Monitor",
+    "kind": "brain",
+    "category": "projekt",
+    "summary": "Liten Linux-app för att följa och styra Claude Code-sessioner live. Huvudagenten och alla subagenter visas som lysande neuronkluster i en 3D-hjärna, med verktygslogg, chatt, token- och kostnadsöversikt samt godkänn/neka-kort för behörigheter. Körs helt lokalt i ett GTK/WebKitGTK-fönster.",
+    "tech": [
+      "Python",
+      "GTK",
+      "WebKitGTK",
+      "JavaScript",
+      "three.js"
+    ],
+    "url": "https://github.com/willevic2002/agent-monitor",
+    "year": 2026
   }
 ]
